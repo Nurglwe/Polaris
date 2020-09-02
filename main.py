@@ -30,9 +30,9 @@ async def unraid(ctx, invite ):
   print(ctx.guild.invites)
   for i in await ctx.guild.invites():
     if i.invitee == ctx.author:
-      infor i in await ctx.guild.invites():
+      for i in await ctx.guild.invites():
         if i.inviter == ctx.author:
-          inviter = 1
+          
 
 
 
