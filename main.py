@@ -6,6 +6,8 @@ from better_profanity import profanity
 from discord.ext import commands
 profanity.load_censor_words_from_file("profanity.txt")
 client = commands.Bot(command_prefix="->")
+traindex = []
+
 
 '''
 BELOW IS EVENTS
@@ -44,6 +46,7 @@ async def on_message(message):
 async def on_ready():
 
     print("Ready")
+
 
 
 @client.event
@@ -125,6 +128,36 @@ async def setplaying(ctx, message: str):
 async def setwatching(ctx, message: str):
   activity = discord.Activity(name= message, type=discord.ActivityType.watching)
   await client.change_presence(activity=activity)
+
+@client.command()
+@commands.has_role('Train novice')
+async def traindex(ctx, train):
+  with open('traindex.txt') as f:
+    traindexs = f.read().splitlines()
+    print(traindexs)
+  for line in range(len(traindexs)):
+    traincontents = traindexs[line].split(",")
+    if traincontents[0] == train:
+      await ctx.channel.send(traincontents)
+      embed = discord.Embed(title="Traindex", color=0x0c1a96)
+      
+      embed.add_field(name="Name:", value =traincontents[0])
+      embed.add_field(name = "Power:", value = traincontents[1] )
+      embed.add_field(name = "Power type:", value = traincontents [2])
+      embed.add_field(name= "Dimensions (M): ", value = traincontents[3])
+      embed.set_image(url=traincontents[4])
+      embed.set_author(name="Requested by:", url = "https://discordapp.com", icon_url = "https://cdn.discordapp.com/embed/avatars/0.png" )
+      embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
+      await ctx.channel.send(embed=embed)  
+  
+
+    
+
+
+      
+      
+      
+
 
 
 
