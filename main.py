@@ -1,5 +1,5 @@
 import keepalive
-keepalive.keep_alive()
+
 #No touch above
 import discord
 from better_profanity import profanity
@@ -7,57 +7,45 @@ from discord.ext import commands
 profanity.load_censor_words_from_file("profanity.txt")
 client = commands.Bot(command_prefix="->")
 
+'''
+BELOW IS EVENTS
+'''
 
 
 @client.event
 async def on_message(message):
+  
   if profanity.contains_profanity(message.content):
     await message.channel.purge(limit=1)
     await message.channel.send("Don't swear")
-    await client.process_commands(message)
-
-  elif message.channel.id==615485719728750602 and message.content != "":
-    await message.channel.purge(limit=1)
-    await client.process_commands(message)
-  else:
-    return
-    await client.process_commands(message)
-  await client.process_commands(message)
+    print("swear deleted")
+    channel = message.guild.get_channel(739491604129251427)
+    embed = discord.Embed(title="Message Deleted", color=0xb31212)
+    embed.add_field(name="Swearing deleted:", value=message.content , inline=False)
+    embed.add_field(name="Author:", value = message.author.name  ,inline=False)
+    embed.add_field(name="ID:", value = message.author.id, inline = False)
+    embed.add_field(name="Message ID:", value = message.id)
+    if channel is None:
+      print("Channel not found")
+    else:
+      await channel.send(embed=embed)
   
-#@client.command()
-@commands.has_role('Co-Owner')
-async def unraid(ctx, invite ):
-  print(ctx.guild.invites)
-  for i in await ctx.guild.invites():
-    if i.invitee == ctx.author:
-      for i in await ctx.guild.invites():
-        if i.inviter == ctx.author:
-          
+  elif message.channel.id == 615485719728750602 and message.content != "":
+    print(message.attachments)
+    if message.attachments != "":
+      print("not pic")
+      await message.channel.purge(limit=1)
+    else:
+      print("pic")  
+  await client.process_commands(message)
 
 
-
-
-
-
-@client.command()
-@commands.has_role('Mod')
-async def purge(ctx,amount=5):
-    print ("purging")
-    await ctx.channel.purge(limit = amount + 1)
-
-
-        
 @client.event
 async def on_ready():
 
     print("Ready")
 
 
-
-
-
-    
-    
 @client.event
 async def on_raw_reaction_add(payload):
     if payload.channel_id==615478660790616093 and payload.emoji.name=="🛡️" :  
@@ -70,19 +58,18 @@ async def on_raw_reaction_add(payload):
         await member.add_roles(role)
         
         
-        
-        
-
-
-
-
+@client.event        
 async def on_message_delete(message):
+  if profanity.contains_profanity(message.content):
+    return
+  else:
     print("deleted message")
-    channel = message.guild.get_channel
+    channel = message.guild.get_channel(739491604129251427)
     embed = discord.Embed(title="Message Deleted", color=0x690AA9)
     embed.add_field(name="Message deleted:", value=message.content , inline=False)
     embed.add_field(name="Author:", value = message.author.name  ,inline=False)
     embed.add_field(name="ID:", value = message.author.id, inline = False)
+    embed.add_field(name="Message ID:", value = message.id)
     if channel is None:
         print("Channel not found")
     else:
@@ -97,13 +84,58 @@ async def on_message_edit(beforemessage,aftermessage):
     embed.add_field(name="Message after:", value=aftermessage.content , inline=False)
     embed.add_field(name="Author:", value = beforemessage.author.name  ,inline=False)
     embed.add_field(name="ID:", value = beforemessage.author.id, inline = False)
+    embed.add_field(name="Message ID:", value = aftermessage.id)
     if channel is None:
         print("Channel not found")
     else:
         await channel.send(embed=embed)    
 
+
+@client.event 
+async def on_raw_bulk_message_delete(payload):
+  amount = len(payload.cached_messages) 
+  embed = discord.Embed(title="Bulk delete", color=0x0c1a96)
+  embed.add_field(name="Message IDs:", value =  payload.message_ids)
+  embed.add_field(name = "Amount of messages:", value = amount , inline = True)
+  guild = client.get_guild(payload.guild_id)
+  channel = discord.utils.get(guild.channels, id = 739491604129251427)
+  if channel is None:
+    print("Error")
+  else:
+    await channel.send(embed=embed)    
+
+'''
+BELOW IS FOR COMMANDS
+'''
+
+
+@client.command()
+@commands.has_role('Mod')
+async def purge(ctx,amount=5):
+    print ("purging" )
+    await ctx.channel.purge(limit = amount + 1)
+
+@client.command()
+@commands.has_role('Co-Owner')
+async def setplaying(ctx, message: str):
+  await client.change_presence(activity=discord.Game(name=message))
+
+@client.command()
+@commands.has_role('Co-Owner')
+async def setwatching(ctx, message: str):
+  activity = discord.Activity(name= message, type=discord.ActivityType.watching)
+  await client.change_presence(activity=activity)
+
+
+
+
+
+
+
+
 # No touch below
     
+keepalive.keep_alive()
 
     
 client.run('NzM5MTg2ODY4OTg1NTI4MzQy.XyWzag.bs167pscooIcofOArGQA68rJNfI')
