@@ -2,6 +2,7 @@ import keepalive
 
 #No touch above
 import discord
+import asyncio
 from better_profanity import profanity
 from discord.ext import commands
 profanity.load_censor_words_from_file("profanity.txt")
@@ -12,6 +13,14 @@ traindex = []
 '''
 BELOW IS EVENTS
 '''
+
+@client.event
+async def on_member_remove(member):
+  guild = discord.utils.get(client.guilds, id = 614714238929338378)
+  channel = discord.utils.get(guild.channels, id = 739491604129251427)
+  
+  await channel.send('Name:{}\nID: {} left '.format(member, member.id))
+
 
 
 @client.event
@@ -44,21 +53,20 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-
-    print("Ready")
+  print("Ready")
 
 
 
 @client.event
 async def on_raw_reaction_add(payload):
-    if payload.channel_id==615478660790616093 and payload.emoji.name=="🛡️" :  
-        print("Message correlation")
-        guild_id=payload.guild_id
-        guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
+  if payload.channel_id==747782704623386624 and   payload.emoji.name=="🛡️" :  
+      print("Message correlation")
+      guild_id=payload.guild_id
+      guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
 
-        role = discord.utils.get(guild.roles, name = "Train novice")
-        member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
-        await member.add_roles(role)
+      role = discord.utils.get(guild.roles, name = "Train novice")
+      member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+      await member.add_roles(role)
         
         
 @client.event        
@@ -96,7 +104,7 @@ async def on_message_edit(beforemessage,aftermessage):
 
 @client.event 
 async def on_raw_bulk_message_delete(payload):
-  amount = len(payload.cached_messages) 
+  amount = len(payload.message_ids) 
   embed = discord.Embed(title="Bulk delete", color=0x0c1a96)
   embed.add_field(name="Message IDs:", value =  payload.message_ids)
   embed.add_field(name = "Amount of messages:", value = amount , inline = True)
@@ -112,24 +120,24 @@ BELOW IS FOR COMMANDS
 '''
 
 
-@client.command()
+@client.command(brief="Deletes messages (Mod+)")
 @commands.has_role('Mod')
 async def purge(ctx,amount=5):
     print ("purging" )
     await ctx.channel.purge(limit = amount + 1)
 
-@client.command()
+@client.command(brief="Set the playing of the bot (Co-Owner)")
 @commands.has_role('Co-Owner')
 async def setplaying(ctx, message: str):
   await client.change_presence(activity=discord.Game(name=message))
 
-@client.command()
+@client.command(brief="Set the watching of the bot (Co-Owner)")
 @commands.has_role('Co-Owner')
 async def setwatching(ctx, message: str):
   activity = discord.Activity(name= message, type=discord.ActivityType.watching)
   await client.change_presence(activity=activity)
 
-@client.command()
+@client.command(brief="Call a train from the Traindex! (Any user)")
 @commands.has_role('Train novice')
 async def traindex(ctx, train):
   with open('traindex.txt') as f:
@@ -137,19 +145,72 @@ async def traindex(ctx, train):
     print(traindexs)
   for line in range(len(traindexs)):
     traincontents = traindexs[line].split(",")
+    print(traincontents[4])
     if traincontents[0] == train:
-      await ctx.channel.send(traincontents)
       embed = discord.Embed(title="Traindex", color=0x0c1a96)
-      
       embed.add_field(name="Name:", value =traincontents[0])
       embed.add_field(name = "Power:", value = traincontents[1] )
       embed.add_field(name = "Power type:", value = traincontents [2])
       embed.add_field(name= "Dimensions (M): ", value = traincontents[3])
       embed.set_image(url=traincontents[4])
-      embed.set_author(name="Requested by:", url = "https://discordapp.com", icon_url = "https://cdn.discordapp.com/embed/avatars/0.png" )
       embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
       await ctx.channel.send(embed=embed)  
-  
+
+@client.command(brief="Directly adds to traindex file (Mod+)")
+@commands.has_role("Mod")
+async def newtrain(ctx,train):
+  file = open("traindex.txt","a")
+  file.write("\n"+train)
+  await ctx.channel.send("Added ", train)
+
+@client.command(brief="Suggest a feature other than trains(Any user)")
+@commands.has_role('Train novice')
+async def suggest(ctx, *, suggestion):
+  if ctx.channel.id == 752570821830115479:
+    file = open("suggestions.txt","a")
+    file.write("\n"+suggestion)
+    await ctx.channel.purge(limit = 1)
+    sugestee = ctx.author
+    embed = discord.Embed(title = "Suggestion", colour = 0x17bda7)
+    embed.set_footer(text = "Suggestion complete")
+    embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/739458979381379072/752567219677954139/IMG_0033.JPG")
+    embed.add_field(name = "Person who suggested", value = sugestee )
+    embed.add_field(name="Suggestion", value = suggestion, inline = False )
+    await ctx.channel.send(embed=embed)
+  else:
+    await ctx.channel.send("Error, wrong channel.")
+    await ctx.channel.purge(limit = 2)
+
+
+@client.command(brief="Gets invites(Mod+)")
+@commands.has_role('Mod')
+async def invites(ctx):
+  inviters = [None]
+  guild = discord.utils.get(client.guilds, id=614714238929338378)
+  inviters= await guild.invites()
+  await ctx.channel.send(inviters)
+  inviters2 = await ctx.channel.invites()
+  await ctx.channel.send(inviters2)
+  for f in range(len(inviters2)):
+
+    uses = inviters2[f].uses   
+    await ctx.channel.send(uses)  
+
+@client.command(brief="Tempbans a user(Mods+)")
+@commands.has_role('Mod')
+async def ban(ctx, user:discord.User, duration: int):
+  duration = duration *60*60*24
+  await ctx.guild.ban(user)
+  await asyncio.sleep(duration)
+  await ctx.guild.unban(user)
+
+@client.command(brief="Add new train suggestion (Any user)")
+async def trainappend(ctx, train):
+  with open("traindexadd.txt","a") as f:
+    f.write(train+"\n")
+    await ctx.channel.send("Sent", train,"to be added to the traindex")
+
+
 
     
 

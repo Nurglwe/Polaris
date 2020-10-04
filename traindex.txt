@@ -1,6 +1,2 @@
-AC4400, 3300 kW, Diesel, 22.30 - 4.01 - 4.72 , https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
-o,i,a,e,e
-x,i,e,a,e
-i,h,u,e,e
-o,h,i,o,e
-h,o,o,t,e
+AC4400, 3300 kW, Diesel, 22.30-4.01-4.72 L-W-H,  https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
+Intercity125, 1678 kW, Diesel, 17.79-2.74-3.81 L-W-H, https://cdn.discordapp.com/attachments/615271081514893324/756203415260102706/download_4.jpg
