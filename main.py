@@ -5,6 +5,7 @@ import discord
 import asyncio
 from better_profanity import profanity
 from discord.ext import commands
+import os
 profanity.load_censor_words_from_file("profanity.txt")
 client = commands.Bot(command_prefix="->")
 traindex = []
@@ -77,10 +78,15 @@ async def on_message_delete(message):
     print("deleted message")
     channel = message.guild.get_channel(739491604129251427)
     embed = discord.Embed(title="Message Deleted", color=0x690AA9)
-    embed.add_field(name="Message deleted:", value=message.content , inline=False)
+    if message.content != "":
+      embed.add_field(name="Message deleted:", value=message.content , inline=False)
     embed.add_field(name="Author:", value = message.author.name  ,inline=False)
     embed.add_field(name="ID:", value = message.author.id, inline = False)
     embed.add_field(name="Message ID:", value = message.id)
+    if message.attachments != "":
+      for att in message.attachments:
+        urll = att.url
+        embed.add_field(name = "Picture sent:", value = urll, inline = False)
     if channel is None:
         print("Channel not found")
     else:
@@ -196,13 +202,16 @@ async def invites(ctx):
     uses = inviters2[f].uses   
     await ctx.channel.send(uses)  
 
-@client.command(brief="Tempbans a user(Mods+)")
+@client.command(brief="Bans a user(Mods+)")
 @commands.has_role('Mod')
 async def ban(ctx, user:discord.User, duration: int):
-  duration = duration *60*60*24
-  await ctx.guild.ban(user)
-  await asyncio.sleep(duration)
-  await ctx.guild.unban(user)
+  if duration == None:
+    await ctx.guild.ban(user)
+  else:
+    duration = duration *60*60*24 
+    await ctx.guild.ban(user)
+    await asyncio.sleep(duration)
+    await ctx.guild.unban(user)
 
 @client.command(brief="Add new train suggestion (Any user)")
 async def trainappend(ctx, train):
@@ -212,27 +221,15 @@ async def trainappend(ctx, train):
 
 
 
-    
-
-
-      
-      
-      
-
-
-
-
-
-
-
-
-
+  
 # No touch below
     
 keepalive.keep_alive()
 
-    
-client.run('NzM5MTg2ODY4OTg1NTI4MzQy.XyWzag.bs167pscooIcofOArGQA68rJNfI')
+
+
+token=os.getenv("TOKEN")    
+client.run(token)
 
 
 

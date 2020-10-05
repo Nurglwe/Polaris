@@ -1,2 +1,3 @@
-AC4400, 3300 kW, Diesel, 22.30-4.01-4.72 L-W-H,  https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
-Intercity125, 1678 kW, Diesel, 17.79-2.74-3.81 L-W-H, https://cdn.discordapp.com/attachments/615271081514893324/756203415260102706/download_4.jpg
+AC4400,3300kW,Diesel,22.30-4.01-4.72L-W-H,  https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
+Intercity125, 1678kW, Diesel, 17.79-2.74-3.81L-W-H, https://cdn.discordapp.com/attachments/615271081514893324/756203415260102706/download_4.jpg
+Class66,2240KW,Diesel,21.4-2.65-3.9L-W-H,https://cdn.discordapp.com/attachments/642413784937267226/762403940573642762/EE.jpg
