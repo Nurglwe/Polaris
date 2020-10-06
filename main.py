@@ -17,8 +17,9 @@ BELOW IS EVENTS
 
 @client.event
 async def on_member_remove(member):
-  guild = discord.utils.get(client.guilds, id = 614714238929338378)
-  channel = discord.utils.get(guild.channels, id = 739491604129251427)
+  
+  guild = discord.utils.get(client.guilds, id = int(os.getenv("GUILD")) )#guild
+  channel = discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
   
   await channel.send('Name:{}\nID: {} left '.format(member, member.id))
 
@@ -31,7 +32,7 @@ async def on_message(message):
     await message.channel.purge(limit=1)
     await message.channel.send("Don't swear")
     print("swear deleted")
-    channel = message.guild.get_channel(739491604129251427)
+    channel = message.guild.get_channel(int(os.getenv("DELC")))#del channel
     embed = discord.Embed(title="Message Deleted", color=0xb31212)
     embed.add_field(name="Swearing deleted:", value=message.content , inline=False)
     embed.add_field(name="Author:", value = message.author.name  ,inline=False)
@@ -42,7 +43,7 @@ async def on_message(message):
     else:
       await channel.send(embed=embed)
   
-  elif message.channel.id == 615485719728750602 and message.content != "":
+  elif message.channel.id == int(os.getenv("PIC")) and message.content != "": #pictures
     print(message.attachments)
     if message.attachments != "":
       print("not pic")
@@ -60,7 +61,7 @@ async def on_ready():
 
 @client.event
 async def on_raw_reaction_add(payload):
-  if payload.channel_id==747782704623386624 and   payload.emoji.name=="🛡️" :  
+  if payload.channel_id==int(os.getenv("VER")) and   payload.emoji.name=="🛡️" :#verify  
       print("Message correlation")
       guild_id=payload.guild_id
       guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
@@ -76,7 +77,7 @@ async def on_message_delete(message):
     return
   else:
     print("deleted message")
-    channel = message.guild.get_channel(739491604129251427)
+    channel = message.guild.get_channel(int(os.getenv("DELC")))#del channel
     embed = discord.Embed(title="Message Deleted", color=0x690AA9)
     if message.content != "":
       embed.add_field(name="Message deleted:", value=message.content , inline=False)
@@ -95,7 +96,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message_edit(beforemessage,aftermessage):
-    channel = beforemessage.guild.get_channel(739491604129251427)
+    channel = beforemessage.guild.get_channel(int(os.getenv("DELC")))#del channel
     embed = discord.Embed(title="Message Edited", color=0xf0c322)
     embed.add_field(name="Message before:", value=beforemessage.content , inline=False)
     embed.add_field(name="Message after:", value=aftermessage.content , inline=False)
@@ -115,7 +116,7 @@ async def on_raw_bulk_message_delete(payload):
   embed.add_field(name="Message IDs:", value =  payload.message_ids)
   embed.add_field(name = "Amount of messages:", value = amount , inline = True)
   guild = client.get_guild(payload.guild_id)
-  channel = discord.utils.get(guild.channels, id = 739491604129251427)
+  channel = discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
   if channel is None:
     print("Error")
   else:
@@ -124,7 +125,6 @@ async def on_raw_bulk_message_delete(payload):
 '''
 BELOW IS FOR COMMANDS
 '''
-
 
 @client.command(brief="Deletes messages (Mod+)")
 @commands.has_role('Mod')
@@ -172,7 +172,7 @@ async def newtrain(ctx,train):
 @client.command(brief="Suggest a feature other than trains(Any user)")
 @commands.has_role('Train novice')
 async def suggest(ctx, *, suggestion):
-  if ctx.channel.id == 752570821830115479:
+  if ctx.channel.id == int(os.getenv("SUG")):#suggest
     file = open("suggestions.txt","a")
     file.write("\n"+suggestion)
     await ctx.channel.purge(limit = 1)
@@ -192,7 +192,7 @@ async def suggest(ctx, *, suggestion):
 @commands.has_role('Mod')
 async def invites(ctx):
   inviters = [None]
-  guild = discord.utils.get(client.guilds, id=614714238929338378)
+  guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))#guild
   inviters= await guild.invites()
   await ctx.channel.send(inviters)
   inviters2 = await ctx.channel.invites()
