@@ -1,3 +1,7 @@
-AC4400,3300kW,Diesel,22.30-4.01-4.72L-W-H,  https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
-Intercity125, 1678kW, Diesel, 17.79-2.74-3.81L-W-H, https://cdn.discordapp.com/attachments/615271081514893324/756203415260102706/download_4.jpg
-Class66,2240KW,Diesel,21.4-2.65-3.9L-W-H,https://cdn.discordapp.com/attachments/642413784937267226/762403940573642762/EE.jpg
+AC4400,3300kW,Diesel,22.30-4.01-4.72,  https://media.discordapp.net/attachments/739458979381379072/752154656154583080/download_3.jpg
+Intercity125, 1678kW, Diesel, 17.79-2.74-3.81, https://cdn.discordapp.com/attachments/615271081514893324/756203415260102706/download_4.jpg
+Class66,2240KW,Diesel,21.4-2.65-3.9,https://cdn.discordapp.com/attachments/642413784937267226/762403940573642762/EE.jpg
+Class44,1715KW,Diesel,20.7-2.71-3.91,https://media.discordapp.net/attachments/615271081514893324/763799411692011551/300px-Class_44_no._44010__Tryfan__on_a_westbound_train_west_of_Frisby_on_the_Wreake_Leicestershire_N.jpg
+Class37,1305kW,Diesel,18.75-2.71-3.89,https://media.discordapp.net/attachments/615271081514893324/763800839223246888/300px-5191693456_59e928f289_Steve_Jones.jpg
+Class08,261kW,Diesel,8.92-2.59-3.88,https://cdn.discordapp.com/attachments/615271081514893324/763805300754743336/download_5.jpg
+Class33,1156kW,Diesel,15.47-2.69-3.86,https://cdn.discordapp.com/attachments/615271081514893324/763806873606160404/download_6.jpg

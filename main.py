@@ -148,16 +148,14 @@ async def setwatching(ctx, message: str):
 async def traindex(ctx, train):
   with open('traindex.txt') as f:
     traindexs = f.read().splitlines()
-    print(traindexs)
   for line in range(len(traindexs)):
     traincontents = traindexs[line].split(",")
-    print(traincontents[4])
     if traincontents[0] == train:
       embed = discord.Embed(title="Traindex", color=0x0c1a96)
       embed.add_field(name="Name:", value =traincontents[0])
       embed.add_field(name = "Power:", value = traincontents[1] )
       embed.add_field(name = "Power type:", value = traincontents [2])
-      embed.add_field(name= "Dimensions (M): ", value = traincontents[3])
+      embed.add_field(name= "Dimensions (M) Length-Width-Height: ", value = traincontents[3])
       embed.set_image(url=traincontents[4])
       embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
       await ctx.channel.send(embed=embed)  
@@ -219,7 +217,9 @@ async def trainappend(ctx, train):
     f.write(train+"\n")
     await ctx.channel.send("Sent", train,"to be added to the traindex")
 
-
+@client.command()
+async def Ping(ctx):
+    await ctx.send('Pong, {} Ms'.format(client.latency))
 
   
 # No touch below
