@@ -2,13 +2,17 @@ import keepalive
 
 #No touch above
 import discord
-import asyncio
 from better_profanity import profanity
 from discord.ext import commands
 import os
+import time,calendar
+import json
+from fuzzywuzzy import fuzz
 profanity.load_censor_words_from_file("profanity.txt")
 client = commands.Bot(command_prefix="->")
 traindex = []
+
+
 
 
 '''
@@ -17,7 +21,7 @@ BELOW IS EVENTS
 
 @client.event
 async def on_member_remove(member):
-  
+  print('Remove')
   guild = discord.utils.get(client.guilds, id = int(os.getenv("GUILD")) )#guild
   channel = discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
   
@@ -27,6 +31,7 @@ async def on_member_remove(member):
 
 @client.event
 async def on_message(message):
+
   
   if profanity.contains_profanity(message.content):
     await message.channel.purge(limit=1)
@@ -44,12 +49,13 @@ async def on_message(message):
       await channel.send(embed=embed)
   
   elif message.channel.id == int(os.getenv("PIC")) and message.content != "": #pictures
-    print(message.attachments)
-    if message.attachments != "":
-      print("not pic")
-      await message.channel.purge(limit=1)
-    else:
-      print("pic")  
+    try:
+      print(message.attachments[0])
+      e = message.attachments[0]
+      e = e.id
+      print(e)
+    except:
+      await message.channel.purge(limit=1)  
   await client.process_commands(message)
 
 
@@ -59,15 +65,15 @@ async def on_ready():
 
 
 
+
 @client.event
 async def on_raw_reaction_add(payload):
   if payload.channel_id==int(os.getenv("VER")) and   payload.emoji.name=="🛡️" :#verify  
       print("Message correlation")
       guild_id=payload.guild_id
       guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
-
       role = discord.utils.get(guild.roles, name = "Train novice")
-      member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+      member = guild.get_member(payload.user_id)
       await member.add_roles(role)
         
         
@@ -96,6 +102,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message_edit(beforemessage,aftermessage):
+  if beforemessage.content != aftermessage.content:
     channel = beforemessage.guild.get_channel(int(os.getenv("DELC")))#del channel
     embed = discord.Embed(title="Message Edited", color=0xf0c322)
     embed.add_field(name="Message before:", value=beforemessage.content , inline=False)
@@ -106,7 +113,9 @@ async def on_message_edit(beforemessage,aftermessage):
     if channel is None:
         print("Channel not found")
     else:
-        await channel.send(embed=embed)    
+      await channel.send(embed=embed)   
+  else:
+    print('Link') 
 
 
 @client.event 
@@ -125,6 +134,11 @@ async def on_raw_bulk_message_delete(payload):
 '''
 BELOW IS FOR COMMANDS
 '''
+@client.command(brief="Call someone a spanner")
+async def spanner(ctx,user:discord.User):
+  e = 'https://tenor.com/view/injury-hurt-ouch-ow-dodgeball-gif-5148623'
+  await ctx.channel.send('<@{}> is an absolute spanner {}'.format(user.id,e))
+
 
 @client.command(brief="Deletes messages (Mod+)")
 @commands.has_role('Mod')
@@ -143,14 +157,21 @@ async def setwatching(ctx, message: str):
   activity = discord.Activity(name= message, type=discord.ActivityType.watching)
   await client.change_presence(activity=activity)
 
+
+
 @client.command(brief="Call a train from the Traindex! (Any user)")
-@commands.has_role('Train novice')
-async def traindex(ctx, train):
+async def traindex(ctx, *args):
+  train = ' '.join(args)
   with open('traindex.txt') as f:
     traindexs = f.read().splitlines()
   for line in range(len(traindexs)):
     traincontents = traindexs[line].split(",")
+    train = train.lower()
+
     if traincontents[0] == train:
+      if traincontents[4] == '':
+        traincontents[4] = 'https://media.discordapp.net/attachments/615271081514893324/793798996846051378/Image_not_found.png'
+      found= True
       embed = discord.Embed(title="Traindex", color=0x0c1a96)
       embed.add_field(name="Name:", value =traincontents[0])
       embed.add_field(name = "Power:", value = traincontents[1] )
@@ -158,7 +179,37 @@ async def traindex(ctx, train):
       embed.add_field(name= "Dimensions (M) Length-Width-Height: ", value = traincontents[3])
       embed.set_image(url=traincontents[4])
       embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
-      await ctx.channel.send(embed=embed)  
+      await ctx.channel.send(embed=embed)
+      break
+    else:
+      found= False
+  if found == False:
+    values = []
+    trains = []
+    for line in traindexs:
+      contents = line.split(',')
+      sim = fuzz.ratio(train, contents[0])
+      if sim > 89:
+        print(train)
+        embed = discord.Embed(title="Traindex", color=0x0c1a96)
+        embed.add_field(name="Name:", value =contents[0])
+        embed.add_field(name = "Power:", value = contents[1] )
+        embed.add_field(name = "Power type:", value = contents [2])
+        embed.add_field(name= "Dimensions (Length-Width-Height): ", value = traincontents[3])
+        embed.set_image(url=contents[4])
+        embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
+        await ctx.channel.send(embed=embed)
+        return
+      values.append(sim)
+      trains.append(contents[0])
+    top3 = list(sorted(zip(values, trains), reverse=True))[:3]
+    embed=discord.Embed(title='Error: Train not found', colour = 0x990000)
+    embed.add_field(name='Oops',value = 'The number is the % match to your requested train and name of that train')
+    embed.add_field(name='Sorry, the train was not found, possible trains you requested could be:',value = top3[0],inline= False)
+    embed.add_field(name='Train 2', value =top3[1],inline=False)
+    embed.add_field(name='Train 3',value = top3[2],inline= False)
+    await ctx.channel.send(embed=embed)
+
 
 @client.command(brief="Directly adds to traindex file (Mod+)")
 @commands.has_role("Mod")
@@ -168,7 +219,6 @@ async def newtrain(ctx,train):
   await ctx.channel.send("Added ", train)
 
 @client.command(brief="Suggest a feature other than trains(Any user)")
-@commands.has_role('Train novice')
 async def suggest(ctx, *, suggestion):
   if ctx.channel.id == int(os.getenv("SUG")):#suggest
     file = open("suggestions.txt","a")
@@ -200,16 +250,53 @@ async def invites(ctx):
     uses = inviters2[f].uses   
     await ctx.channel.send(uses)  
 
+
+
+
+
+
+
 @client.command(brief="Bans a user(Mods+)")
 @commands.has_role('Mod')
 async def ban(ctx, user:discord.User, duration: int):
   if duration == None:
     await ctx.guild.ban(user)
   else:
+    dur2 = duration
     duration = duration *60*60*24 
-    await ctx.guild.ban(user)
-    await asyncio.sleep(duration)
-    await ctx.guild.unban(user)
+    now = calendar.timegm(time.gmtime())
+    now = int(now)
+    when = now + duration
+    print(when)
+    with open('banned.txt') as f:
+      data=json.load(f)
+    print(data)
+    #between here add ban to list 
+    user = str(user)
+    user = user[:-5]
+    print(user)
+    y = {user:when}
+    data.update(y)
+    print(data)
+    with open('banned.txt','w') as f:
+      json.dump(data,f)
+    await ctx.channel.send('User banned')
+    time.sleep(dur2)
+    for target in data:
+      print(target)
+      if not data[target] <= calendar.timegm(time.gmtime()):
+        print('unban')
+   
+    
+
+
+
+
+
+
+
+
+
 
 @client.command(brief="Add new train suggestion (Any user)")
 async def trainappend(ctx, train):
@@ -218,10 +305,47 @@ async def trainappend(ctx, train):
     await ctx.channel.send("Sent", train,"to be added to the traindex")
 
 @client.command()
-async def Ping(ctx):
-    await ctx.send('Pong, {} Ms'.format(client.latency))
+async def ping(ctx):
+    await ctx.send('Pong, {} Ms'.format(round(client.latency * 1000,2)))
 
-  
+
+@client.command(brief='Locks a channel (Mods+)')
+@commands.has_role('Mod')
+async def lock (ctx):
+  roles = [
+  747130286050902056,
+  618887025747296277,
+  618887927069671439,
+  618887555038838808
+  ]
+  for put in roles:
+    put2 = discord.utils.get(ctx.guild.roles, id=put)
+    await ctx.channel.set_permissions(put2, send_messages=False, read_messages = True)
+
+@client.command(brief='Unlocks a channel(Mods+)')
+@commands.has_role('Mod')
+async def unlock (ctx):
+  roles = [
+  747130286050902056,
+  618887025747296277,
+  618887927069671439,
+  618887555038838808
+  ]
+  for put in roles:
+    put2 = discord.utils.get(ctx.guild.roles, id=put)
+    await ctx.channel.set_permissions(put2, send_messages=True, read_messages= True)
+
+@client.command(brief='Bot joins channel and plays music (Any user)')
+async def play(ctx, *args ):
+  print(args)
+
+
+
+
+
+
+
+
 # No touch below
     
 keepalive.keep_alive()

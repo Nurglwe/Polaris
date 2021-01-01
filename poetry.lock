@@ -108,6 +108,17 @@ dotenv = ["python-dotenv"]
 
 [[package]]
 category = "main"
+description = "Fuzzy string matching in python"
+name = "fuzzywuzzy"
+optional = false
+python-versions = "*"
+version = "0.18.0"
+
+[package.extras]
+speedup = ["python-levenshtein (>=0.12)"]
+
+[[package]]
+category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
 optional = false
@@ -154,6 +165,14 @@ version = "4.7.6"
 
 [[package]]
 category = "main"
+description = "Python extension for computing string edit distances and similarities."
+name = "python-levenshtein-wheels"
+optional = false
+python-versions = "*"
+version = "0.13.1"
+
+[[package]]
+category = "main"
 description = "The comprehensive WSGI web application library."
 name = "werkzeug"
 optional = false
@@ -177,7 +196,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "49e3ee6f08a9dfef5f4ed140631995ea5cf295c406332f1cd3ffcdede4b9b776"
+content-hash = "e824055b5fd3051baba89a7de576adf65890cd4f39bda0ab9659e2a4ec5cd3c8"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -226,6 +245,10 @@ discord = [
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},
     {file = "Flask-1.1.2.tar.gz", hash = "sha256:4efa1ae2d7c9865af48986de8aeb8504bf32c7f3d6fdc9353d34b21f4b127060"},
+]
+fuzzywuzzy = [
+    {file = "fuzzywuzzy-0.18.0-py2.py3-none-any.whl", hash = "sha256:928244b28db720d1e0ee7587acf660ea49d7e4c632569cad4f1cd7e68a5f0993"},
+    {file = "fuzzywuzzy-0.18.0.tar.gz", hash = "sha256:45016e92264780e58972dca1b3d939ac864b78437422beecebb3095f8efd00e8"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
@@ -292,6 +315,58 @@ multidict = [
     {file = "multidict-4.7.6-cp38-cp38-win32.whl", hash = "sha256:5cf311a0f5ef80fe73e4f4c0f0998ec08f954a6ec72b746f3c179e37de1d210d"},
     {file = "multidict-4.7.6-cp38-cp38-win_amd64.whl", hash = "sha256:7388d2ef3c55a8ba80da62ecfafa06a1c097c18032a501ffd4cabbc52d7f2b19"},
     {file = "multidict-4.7.6.tar.gz", hash = "sha256:fbb77a75e529021e7c4a8d4e823d88ef4d23674a202be4f5addffc72cbb91430"},
+]
+python-levenshtein-wheels = [
+    {file = "python-Levenshtein-wheels-0.13.1.tar.gz", hash = "sha256:11c77d0d74ab7f46f89a58ae9c2d67349ebc1ae3e18636627f9939d810167c31"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:1a61f3a51e00a3608659bbaabb3f27af37c9dbe84d843369061a3e45cf0d5103"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:b679f951f842c38665aa54bea4d7403099131f71fac6d8584f893a731fe1266d"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:57c4edef81611098d37176278f2b6a3712bf864eed313496d7d80504805896d1"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:f55adf069be2d655f8d668594fe1be1b84d9dc8106d380a9ada06f34941c33c8"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-manylinux2010_x86_64.whl", hash = "sha256:5b36e406937c6463d1c1ef3dd82d3f771d9d845f21351e8a026fe4dd398ea8d0"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-win32.whl", hash = "sha256:ac9cdf044dcb9481c7da782db01b50c1f0e7cdd78c8507b963b6d072829c0263"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27m-win_amd64.whl", hash = "sha256:19a95a01d28d63b042438ba860c4ace90362906a038fa77962ba33325d377d10"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27mu-linux_armv7l.whl", hash = "sha256:1e51cdc123625a28709662d24ea0cb4cf6f991845e6054d9f803c78da1d6b08f"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27mu-manylinux1_i686.whl", hash = "sha256:3ed88f9e638da57647149115c34e0e120cae6f3d35eee7d77e22cc9c1d8eced3"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:b8c183dc4aa4e95dc5c373eedc3d205c176805835611fcfec5d9050736c695c4"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27mu-manylinux2010_i686.whl", hash = "sha256:ad15f25abff8220e556d64e2a27c646241b08f00faf1bc02313655696cd3edfa"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:86e865f29ad3dc3bb4733e5247220173d90f05ac8d2ad18e9689a220f90de55f"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-linux_armv7l.whl", hash = "sha256:4bb128b719c30f3b9feacfe71a338ae07d39dbffc077139416f3535c89f12362"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-macosx_10_6_intel.whl", hash = "sha256:98727050ba70eb8d318ec8a8203531c20119347fc8f281102b097326812742ab"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-manylinux1_i686.whl", hash = "sha256:1c50aebebab403fb2dd415d70355446ac364dece502b0e2737a1a085bb9a4aa4"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-manylinux1_x86_64.whl", hash = "sha256:c2c76f483d05eddec60a5cd89e92385adef565a4f243b1d9a6abe2f6bd2a7c0a"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-win32.whl", hash = "sha256:7f9759095b3fc825464a72b1cae95125e610eba3c70f91557754c32a0bf32ea2"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp34-cp34m-win_amd64.whl", hash = "sha256:089d046ea7727e583233c71fef1046663ed67b96967063ae8ddc9f551e86a4fc"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-linux_armv7l.whl", hash = "sha256:23020f9ff2cb3457a926dcc470b84f9bd5b7646bd8b8e06b915bdbbc905cb23f"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-macosx_10_6_intel.whl", hash = "sha256:445bf7941cb1fa05d6c2a4a502ad4868a5cacd92e8eb77b2bd008cdda9d37c55"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:228b59460e9a786e498bdfc8011838b89c6054650b115c86c9c819a055a793b0"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:0065529c8aec4c044468286177761857d36981ba6f7fdb62d7d5f7ffd143de5d"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-manylinux2010_i686.whl", hash = "sha256:fb7df3504222fcb1fa593f76623abbb54d6019eec15aac5d05cd07ad90ac016c"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-manylinux2010_x86_64.whl", hash = "sha256:4e951907b9b5d40c9f1b611c8bdfe46ff8cf8371877cebbd589bf5840feab662"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-win32.whl", hash = "sha256:0aea217eab612acd45dcc3424a2e8dbd977cc309f80359d0c01971f1e65b9a9b"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp35-cp35m-win_amd64.whl", hash = "sha256:7f7283dfe50eac8a8cd9b777de9eb50b1edf7dbb46fc7cc9d9b0050d0c135021"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-linux_armv7l.whl", hash = "sha256:53c0c9964390368fd64460b690f168221c669766b193b7e80ae3950c2b9551f8"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:c388baa3c04272a7c585d3da24030c142353eb26eb531dd2681502e6be7d7a26"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:016924a59d689f9f47d5f7b26b70f31e309255e8dd72602c91e93ceb752b9f92"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:3e6bcca97a7ff4e720352b57ddc26380c0583dcdd4b791acef7b574ad58468a7"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:3b591c9a7e91480f0d7bf2041d325f578b9b9c2f2d593304377cb28862e7f9a2"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:0ec1bc73f5ed3a1a06e02d13bb3cd22a0b32ebf65a9667bbccba106bfa0546f1"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-win32.whl", hash = "sha256:cb0f2a711db665b5bf8697b5af3b9884bb1139385c5c12c2e472e4bbee62da99"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp36-cp36m-win_amd64.whl", hash = "sha256:0fa2ca69ef803bc6037a8c919e2e8a17b55e94c9c9ffcb4c21befbb15a1d0f40"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-linux_armv7l.whl", hash = "sha256:1f0056d3216b0fe38f25c6f8ebc84bd9f6d34c55a7a9414341b674fb98961399"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-macosx_10_6_intel.whl", hash = "sha256:4ba5e147d76d7ee884fd6eae461438b080bcc9f2c6eb9b576811e1bcfe8f808e"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:0beb91ad80b1573829066e5af36b80190c367be6e0a65292f073353b0388c7fc"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:cbac984d7b36e75b440d1c8ff9d3425d778364a0cbc23f8943383d4decd35d5e"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:acfad8ffed96891fe7c583d92717cd8ec0c03b59a954c389fd4e26a5cdeac610"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:c097a6829967c76526a037ed34500a028f78f0d765c8e3dbd1a7717afd09fb92"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-win32.whl", hash = "sha256:19a68716a322486ddffc8bf7e5cf44a82f7700b05a10658e6e7fc5c7ae92b13d"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp37-cp37m-win_amd64.whl", hash = "sha256:f9084ed3b8997ad4353d124b903f2860a9695b9e080663276d9e58c32e293244"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:8005a4df455569c0d490ddfd9e5a163f21293477fd0ed4ea9effdd723ddd8eaa"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-manylinux1_i686.whl", hash = "sha256:1eca6dc97dfcf588f53281fe48a6d5c423d4e14bdab658a1aa6efd447acc64e0"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:1d2390d04f9b673391e5ce1a0b054d0565f2e00ea5d1187a044221dc5c02c3e6"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:7d0821dab24b430dfdc2cba70a06e6d7a45cb839d0dd0e6db97bb99e23c3d884"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:2b7b7cf0f43b677f818aa9a610464abf06106c19a51b9ac35bd051a439f337a5"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-win32.whl", hash = "sha256:09f9faaaa8f65726f91b44c11d3d622fee0f1780cfbe2bf3f410dd0e7345adcb"},
+    {file = "python_Levenshtein_wheels-0.13.1-cp38-cp38-win_amd64.whl", hash = "sha256:3ca9c70411ab587d071c1d8fc8b69d0558be8e4aa920f2595e2cb5eb229ccc4c"},
 ]
 werkzeug = [
     {file = "Werkzeug-1.0.1-py2.py3-none-any.whl", hash = "sha256:2de2a5db0baeae7b2d2664949077c2ac63fbd16d98da0ff71837f7d1dea3fd43"},
