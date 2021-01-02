@@ -62,6 +62,7 @@ async def on_message(message):
 @client.event
 async def on_ready():
   print("Ready")
+   
 
 
 
@@ -250,53 +251,44 @@ async def invites(ctx):
     uses = inviters2[f].uses   
     await ctx.channel.send(uses)  
 
-
-
-
-
-
-
 @client.command(brief="Bans a user(Mods+)")
 @commands.has_role('Mod')
+@commands.has_permissions(ban_members=True)
 async def ban(ctx, user:discord.User, duration: int):
   if duration == None:
     await ctx.guild.ban(user)
   else:
-    dur2 = duration
     duration = duration *60*60*24 
     now = calendar.timegm(time.gmtime())
     now = int(now)
     when = now + duration
-    print(when)
     with open('banned.txt') as f:
       data=json.load(f)
-    print(data)
-    #between here add ban to list 
-    user = str(user)
-    user = user[:-5]
-    print(user)
-    y = {user:when}
+    user2 = str(user)
+    user2 = user2[:-5]
+    print(user2)
+    y = {user2:when}
     data.update(y)
-    print(data)
     with open('banned.txt','w') as f:
       json.dump(data,f)
-    await ctx.channel.send('User banned')
-    time.sleep(dur2)
-    for target in data:
-      print(target)
-      if not data[target] <= calendar.timegm(time.gmtime()):
-        print('unban')
-   
-    
+    await ctx.guild.ban(user)
+    await ctx.channel.send('{} banned'.format(user2))
 
-
-
-
-
-
-
-
-
+@client.command(brief='Checks all bans(Mod+)')
+@commands.has_role('Mod')
+async def checkbans(ctx):
+  with open('banned.txt') as f:
+    data = json.load(f)
+  for target in data:
+    if data[target] <= calendar.timegm(time.gmtime()):
+      print('req')
+      guild = discord.utils.get(client.guilds, id = int(os.getenv("GUILD")))
+      banlist = await guild.bans()
+      for target2 in banlist:
+        print('e')
+        if target2.user.name == target:
+          await ctx.guild.unban(target2.user)
+          await ctx.channel.send('{} was unbanned'.format(target2.user.name)) 
 
 @client.command(brief="Add new train suggestion (Any user)")
 async def trainappend(ctx, train):
