@@ -1,5 +1,4 @@
 import keepalive
-
 #No touch above
 import discord,requests
 from better_profanity import profanity
@@ -19,6 +18,47 @@ traindex = []
 '''
 BELOW IS EVENTS
 '''
+
+
+
+
+@client.event
+async def on_member_join(payload):
+  print(payload)
+  with open("join.txt","r") as f:
+    data = json.load(f)
+  guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))
+  invs= await guild.invites()
+  for x in invs:
+    y=x.code
+    if not(y in data):
+      b={y:x.uses}
+      data.update(b)
+    with open("join.txt","w") as f:
+      json.dump(data,f)
+
+  for x in invs:
+    
+    if data[y]<x.uses:
+        data[y]=x.uses
+        print("invite is "+y)
+  
+        break
+  with open("join.txt",'w') as f:
+    json.dump(data,f)
+  
+  embed = discord.Embed(title="Message Deleted", color=0xb31212)#Puts message in deleted messages
+  embed.add_field(name="Swearing deleted:", value=message.content , inline=False)
+  embed.add_field(name="Author:", value = message.author.name  ,inline=False)
+  embed.add_field(name="ID:", value = message.author.id, inline = False)
+  embed.add_field(name="Message ID:", value = message.id)
+  if channel is None:
+    print("Channel not found")
+  else:
+    await channel.send(embed=embed)
+     
+  
+  
 
 @client.event
 async def on_member_remove(member):
@@ -88,24 +128,19 @@ async def on_message_delete(message):
     return
   else:
     print("deleted message")
-    #Standard embed stuff
+  #Standard embed stuff
     channel = message.guild.get_channel(int(os.getenv("DELC")))#del channel
-    embed = discord.Embed(title="Message Deleted", color=0x690AA9)
+    link='https://discordapp.com/channels/{}/{}/{}'.format(message.guild.id,message.channel.id,message.id)
+    embed = discord.Embed(title="Message Deleted", color=0x690AA9, description='Link to [message]({})'.format(link))
     if message.content != "":
       embed.add_field(name="Message deleted:", value=message.content , inline=False)
     embed.add_field(name="Author:", value = message.author.name  ,inline=False)
-    embed.add_field(name="ID:", value = message.author.id, inline = False)
+    embed.add_field(name="Author ID:", value = message.author.id, inline = False)
     embed.add_field(name="Message ID:", value = message.id)
-    if message.attachments != "":
-      for att in message.attachments:
-        urll = att.url
-        embed.add_field(name = "Picture sent:", value = urll, inline = False)
-        #adds a link to photos if added
     if channel is None:
         print("Channel not found")
     else:
         await channel.send(embed=embed)
-
 
 @client.event
 async def on_message_edit(beforemessage,aftermessage):
@@ -113,7 +148,8 @@ async def on_message_edit(beforemessage,aftermessage):
   if beforemessage.content != aftermessage.content:
   #logs into channel
     channel = beforemessage.guild.get_channel(int(os.getenv("DELC")))#del channel
-    embed = discord.Embed(title="Message Edited", color=0xf0c322)
+    link='https://discordapp.com/channels/{}/{}/{}'.format(beforemessage.guild.id,beforemessage.channel.id,beforemessage.id)
+    embed = discord.Embed(title="Message Edited", color=0xf0c322,description='Link to [message]({})'.format(link))
     embed.add_field(name="Message before:", value=beforemessage.content , inline=False)
     embed.add_field(name="Message after:", value=aftermessage.content , inline=False)
     embed.add_field(name="Author:", value = beforemessage.author.name  ,inline=False)
@@ -129,7 +165,7 @@ async def on_message_edit(beforemessage,aftermessage):
 
 @client.event 
 async def on_raw_bulk_message_delete(payload):
-  #Collects messages if needed for reports but doesn't log all the info(useful for spam and stuff)
+  #Collects messages if needed for reports but doesn't log all the info (useful for spam and stuff)
   amount = len(payload.message_ids) 
   embed = discord.Embed(title="Bulk delete", color=0x0c1a96)
   embed.add_field(name="Message IDs:", value =  payload.message_ids)
@@ -141,15 +177,19 @@ async def on_raw_bulk_message_delete(payload):
   else:
     await channel.send(embed=embed)    
 
+  
+
 '''
 BELOW IS FOR COMMANDS
 '''
 @client.command(brief="Call someone a spanner")
 async def spanner(ctx,user:discord.User):
   #Sort of an insult, but sort of train related...
-  e = 'https://tenor.com/view/injury-hurt-ouch-ow-dodgeball-gif-5148623'
-  await ctx.channel.send('<@{}> is an absolute spanner {}'.format(user.id,e))
-
+  e = 'https://media1.tenor.com/images/e01b325c047d38e4968b17a52aae0186/tenor.gif?itemid=5148623'
+  embed=discord.Embed(Title="Spanner")
+  embed.set_image(url=e)
+  await ctx.channel.send('<@{}> is an absolute spanner'.format(user.id))
+  await ctx.channel.send(embed=embed)
 
 @client.command(brief="Deletes messages (Mod+)")
 @commands.has_role('Mod')
@@ -185,7 +225,7 @@ async def traindex(ctx, *args):
     if traincontents[0] == train:
       if traincontents[4] == '':
         traincontents[4] ='https://media.discordapp.net/attachments/615271081514893324/793798996846051378/Image_not_found.png'
-      #finds picture, if none then it will replace it with a normal photo (helps bc I don't have to worry about finding a photo)
+      #finds picture, if none then it will replace it with a normal photo (helps bc I don't have to worry about finding a photo for now)
       found= True
       embed = discord.Embed(title="Traindex", color=0x0c1a96)
       embed.add_field(name="Name:", value =traincontents[0])
@@ -213,7 +253,7 @@ async def traindex(ctx, *args):
         embed.add_field(name = "Power type:", value = contents [2])
         embed.add_field(name= "Dimensions (Length-Width-Height): ", value = traincontents[3])
         embed.set_image(url=contents[4])
-        embed.set_footer(text = "Trains are sacred", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
+        embed.set_footer(text = "Fuzzywuzzy saved you", icon_url = "https://media.discordapp.net/attachments/739458979381379072/752158619428061244/IMG_0063.JPG?width=624&height=468")
         await ctx.channel.send(embed=embed)
         return
       values.append(sim)
@@ -230,33 +270,36 @@ async def traindex(ctx, *args):
 @client.command(brief="Directly adds to traindex file (Mod+)")
 @commands.has_role("Mod")
 async def newtrain(ctx,train):
+  #PRetty much puts the formatted input into the file
   file = open("traindex.txt","a")
   file.write("\n"+train)
   await ctx.channel.send("Added ", train)
 
 @client.command(brief="Suggest a feature other than trains(Any user)")
 async def suggest(ctx, *args):
+  #suggest uses trello API to make a card into the to do part
   sugestee = ctx.author.name
-  if ctx.channel.id == int(os.getenv("SUG")):#suggest
+  if ctx.channel.id == int(os.getenv("SUG")):#checks if in suggestions channel
     await ctx.channel.purge(limit = 1)
-    helpme=" ".join(args)
+    helpme=" ".join(args) #very original variables, whaich join the args into a string so it can be parsed
     desc='Suggested by: '+sugestee +'\nSuggestion: '+helpme
-    r=requests.post(url='https://api.trello.com/1/cards?key={}&token={}&name={}&idList=5f0c5f74e2601d4b6829ce51&desc={}'.format(str(os.getenv("KEY")),str(os.getenv("TRTOKEN")),helpme,desc)) 
+    r=requests.post(url='https://api.trello.com/1/cards?key={}&token={}&name={}&idList=5f0c5f74e2601d4b6829ce51&desc={}'.format(str(os.getenv("KEY")),str(os.getenv("TRTOKEN")),helpme,desc)) #BTW env file is slocal to my account, which means that you need to make a file called .env to be able to store server codes/tokens
     embed = discord.Embed(title = "Suggestion", colour = 0x69ff91)
     embed.set_footer(text = "Suggestion complete")
     embed.set_thumbnail(url = "https://cdn.discordapp.com/attachments/739458979381379072/752567219677954139/IMG_0033.JPG")
     embed.add_field(name = "Person who suggested", value = sugestee )
     embed.add_field(name="Suggestion", value = helpme, inline = False )
-    await ctx.channel.send(embed=embed)
+    await ctx.channel.send(embed=embed) #makes and sends embed
     print(r)
   else:
     await ctx.channel.send("Error, wrong channel.")
-    await ctx.channel.purge(limit = 2)  
+    await ctx.channel.purge(limit = 2)  #tells people if in wrong channel
 
 
 @client.command(brief="Gets invites(Mod+)")
 @commands.has_role('Mod')
 async def invites(ctx):
+  #pulls a list of invites, was gonna use for anti-raid bot
   inviters = [None]
   guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))#guild
   inviters= await guild.invites()
@@ -321,7 +364,8 @@ async def checkbans(ctx):
 @client.command(brief="Add new train suggestion (Any user)")
 async def trainappend(ctx, *args):
   sugestee = ctx.author.name
-  if ctx.channel.id == int(os.getenv("SUG")):#suggest
+  if ctx.channel.id == int(os.getenv("SUG")):
+    time.sleep(1)#suggest
     await ctx.channel.purge(limit = 1)
     helpme=" ".join(args)
     desc='Suggested by: '+sugestee +'\nTrain suggestion: '+helpme
@@ -372,13 +416,6 @@ async def unlock (ctx):
 async def play(ctx, *args ):
   print(args)
 
-
-
-
-
-
-
-
 # No touch below
     
 keepalive.keep_alive()
@@ -387,6 +424,4 @@ keepalive.keep_alive()
 
 token=os.getenv("TOKEN")    
 client.run(token)
-
-
 

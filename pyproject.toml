@@ -11,6 +11,7 @@ discord = "^1.0.1"
 flask = "^1.1.2"
 fuzzywuzzy = "^0.18.0"
 python-Levenshtein-wheels = "^0.13.1"
+replit = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 
