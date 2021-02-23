@@ -24,34 +24,35 @@ BELOW IS EVENTS
 
 @client.event
 async def on_member_join(payload):
-  print(payload)
   with open("join.txt","r") as f:
     data = json.load(f)
   guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))
+  channel=discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
   invs= await guild.invites()
   for x in invs:
     y=x.code
     if not(y in data):
-      b={y:x.uses}
+      print("Not found")
+      b={y:0}
       data.update(b)
     with open("join.txt","w") as f:
       json.dump(data,f)
 
   for x in invs:
-    
+    y=x.code
     if data[y]<x.uses:
-        data[y]=x.uses
-        print("invite is "+y)
-  
-        break
+      print(x.uses)
+      v={y:x.uses}
+      data.update(v)
+      print("invite is "+y)
+
+      break
   with open("join.txt",'w') as f:
     json.dump(data,f)
   
-  embed = discord.Embed(title="Message Deleted", color=0xb31212)#Puts message in deleted messages
-  embed.add_field(name="Swearing deleted:", value=message.content , inline=False)
-  embed.add_field(name="Author:", value = message.author.name  ,inline=False)
-  embed.add_field(name="ID:", value = message.author.id, inline = False)
-  embed.add_field(name="Message ID:", value = message.id)
+  embed = discord.Embed(title="Member join", color=0x0a27a6)#Puts message in deleted messages
+  embed.add_field(name="Username:", value=payload , inline=False)
+  embed.add_field(name="Join code:", value = y  ,inline=False)
   if channel is None:
     print("Channel not found")
   else:
@@ -67,7 +68,10 @@ async def on_member_remove(member):
   #Finds guild object
   channel = discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
   #Finds channel object using guild object
-  await channel.send('Name:{}\nID: {} left '.format(member, member.id))
+  embed = discord.Embed(title='Member left', colour=0x780808)
+  embed.add_field(name="Username:", value=member)
+  embed.add_field(name="Member ID:", calue=member.id)
+  await channel.send(embed=embed)
 # Uses channel to send name and ID of 
 
 @client.event
@@ -186,10 +190,9 @@ BELOW IS FOR COMMANDS
 async def spanner(ctx,user:discord.User):
   #Sort of an insult, but sort of train related...
   e = 'https://media1.tenor.com/images/e01b325c047d38e4968b17a52aae0186/tenor.gif?itemid=5148623'
-  embed=discord.Embed(Title="Spanner")
-  embed.set_image(url=e)
+  e=str(e)
   await ctx.channel.send('<@{}> is an absolute spanner'.format(user.id))
-  await ctx.channel.send(embed=embed)
+  await ctx.channel.send(e)
 
 @client.command(brief="Deletes messages (Mod+)")
 @commands.has_role('Mod')
