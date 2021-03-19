@@ -1,11 +1,8 @@
 import keepalive
 #No touch above
-import discord,requests
 from better_profanity import profanity
 from discord.ext import commands
-import os
-import time,calendar
-import json
+import time,calendar,os,json,discord,requests
 from fuzzywuzzy import fuzz
 profanity.load_censor_words_from_file("profanity.txt")
 client = commands.Bot(command_prefix="->")
@@ -26,8 +23,13 @@ BELOW IS EVENTS
 async def on_member_join(payload):
   with open("join.txt","r") as f:
     data = json.load(f)
+  with open("banned.txt",'r') as f:
+    bans=json.load(f)
   guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))
   channel=discord.utils.get(guild.channels, id = int(os.getenv("DELC")))#del channel
+  if str(payload.id) in bans:
+    await payload.ban( reason = "Banned")
+    print("Banned user")
   invs= await guild.invites()
   for x in invs:
     y=x.code
@@ -37,7 +39,6 @@ async def on_member_join(payload):
       data.update(b)
     with open("join.txt","w") as f:
       json.dump(data,f)
-
   for x in invs:
     y=x.code
     if data[y]<x.uses:
@@ -45,7 +46,6 @@ async def on_member_join(payload):
       v={y:x.uses}
       data.update(v)
       print("invite is "+y)
-
       break
   with open("join.txt",'w') as f:
     json.dump(data,f)
@@ -57,6 +57,8 @@ async def on_member_join(payload):
     print("Channel not found")
   else:
     await channel.send(embed=embed)
+
+
      
   
   
@@ -70,7 +72,7 @@ async def on_member_remove(member):
   #Finds channel object using guild object
   embed = discord.Embed(title='Member left', colour=0x780808)
   embed.add_field(name="Username:", value=member)
-  embed.add_field(name="Member ID:", calue=member.id)
+  embed.add_field(name="Member ID:", value=member.id)
   await channel.send(embed=embed)
 # Uses channel to send name and ID of 
 
@@ -303,16 +305,15 @@ async def suggest(ctx, *args):
 @commands.has_role('Mod')
 async def invites(ctx):
   #pulls a list of invites, was gonna use for anti-raid bot
-  inviters = [None]
   guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))#guild
   inviters= await guild.invites()
-  await ctx.channel.send(inviters)
-  inviters2 = await ctx.channel.invites()
-  await ctx.channel.send(inviters2)
-  for f in range(len(inviters2)):
-
-    uses = inviters2[f].uses   
-    await ctx.channel.send(uses)  
+  uses = [x.uses for x in inviters]
+  embed = discord.Embed(title="Invites")
+  for i in inviters:
+    embed.add_field(name="Invite:",value=i,inline=False)
+  for u in uses:
+    embed.add_field(name="Uses:",value=u,inline=False)
+  await ctx.channel.send(embed=embed)
 
 @client.command(brief="Bans a user(Mods+)")
 @commands.has_role('Mod')
@@ -328,15 +329,15 @@ async def ban(ctx, user:discord.User, duration: int, *args):
     when = now + duration
     with open('banned.txt') as f:
       data=json.load(f)
-    user2 = str(user)
-    user2 = user2[:-5]
+    user2 = user.id
+    print(user.id)
     print(user2)
     y = {user2:when}
     data.update(y)
     with open('banned.txt','w') as f:
       json.dump(data,f)
     await ctx.guild.ban(user, delete_message_days=0,reason=reason1)
-    await ctx.channel.send('{} banned'.format(user2))
+    await ctx.channel.send('{} banned'.format(user))
 
 @client.command(brief='Checks all bans(Mod+)')
 @commands.has_role('Mod')
@@ -346,14 +347,12 @@ async def checkbans(ctx):
     data = json.load(f)
   for target in data:
     if data[target] <= calendar.timegm(time.gmtime()):
-      print('req')
       guild = discord.utils.get(client.guilds, id = int(os.getenv("GUILD")))
       banlist = await guild.bans()
-      for target2 in banlist:
-        print('e')
-        if target2.user.name == target:
-          await ctx.guild.unban(target2.user)
-          await ctx.channel.send('{} was unbanned'.format(target2.user.name)) 
+      for targete in banlist:
+        if int(targete.user.id) == int(target): #I spent too long trying to convert this from usernames to user ids
+          await ctx.guild.unban(targete.user)
+          await ctx.channel.send('{} was unbanned'.format(targete.user.name)) 
           unbans.append(target)
   for un in unbans:
     print(un)
@@ -418,6 +417,7 @@ async def unlock (ctx):
 @client.command(brief='Bot joins channel and plays music (Any user)')
 async def play(ctx, *args ):
   print(args)
+  await ctx.channel.send("If only it were that easy :(")
 
 # No touch below
     
