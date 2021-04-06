@@ -2,6 +2,7 @@ import keepalive
 #No touch above
 from better_profanity import profanity
 from discord.ext import commands
+from replit import db
 import time,calendar,os,json,discord,requests
 from fuzzywuzzy import fuzz
 profanity.load_censor_words_from_file("profanity.txt")
@@ -15,8 +16,6 @@ traindex = []
 '''
 BELOW IS EVENTS
 '''
-
-
 
 
 @client.event
@@ -188,6 +187,11 @@ async def on_raw_bulk_message_delete(payload):
 '''
 BELOW IS FOR COMMANDS
 '''
+
+@client.command()
+async def invite (ctx):
+  await ctx.channel.send('https://discord.com/api/oauth2/authorize?client_id=642403747850616864&permissions=0&scope=bot')
+
 @client.command(brief="Call someone a spanner")
 async def spanner(ctx,user:discord.User):
   #Sort of an insult, but sort of train related...
