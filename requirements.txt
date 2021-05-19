@@ -1,4 +1,4 @@
-discord==1.0.1
+git+https://github.com/Rapptz/discord.py
 Flask==2.0.0
 fuzzywuzzy==0.18.0
 python-Levenshtein-wheels==0.13.2
