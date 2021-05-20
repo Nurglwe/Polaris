@@ -2,7 +2,6 @@ import keepalive
 #No touch above
 from better_profanity import profanity
 from discord.ext import commands
-from replit import db
 import time,calendar,os,json,discord,requests
 from fuzzywuzzy import fuzz
 profanity.load_censor_words_from_file("profanity.txt")
