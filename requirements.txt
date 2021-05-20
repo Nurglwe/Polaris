@@ -1,4 +1,5 @@
 git+https://github.com/Rapptz/discord.py
+git+git://github.com/psf/requests
 Flask==2.0.0
 fuzzywuzzy==0.18.0
 python-Levenshtein-wheels==0.13.2
