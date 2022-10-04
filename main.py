@@ -1,3 +1,4 @@
+
 import keepalive
 #No touch above
 from better_profanity import profanity
@@ -9,7 +10,7 @@ client = commands.Bot(command_prefix="->")
 traindex = []
 
 #Commenting in progress
-#Contact me on discord at Nurglwe#8387 if you want 
+#Contact me on discord at Nurglwe#8387 if you want support
 
 
 '''
@@ -76,8 +77,6 @@ async def on_member_remove(member):
 
 @client.event
 async def on_message(message):
-
-  #Swear filter
   if profanity.contains_profanity(message.content): #uses method provided by profanity to check message
     await message.channel.purge(limit=1) #Deletes message if it get picked up
     await message.channel.send("Don't swear") #could hook up to warn system?
