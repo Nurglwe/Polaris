@@ -1,5 +1,5 @@
 
-import keepalive
+#import keepalive
 #No touch above
 from better_profanity import profanity
 from discord.ext import commands
@@ -199,20 +199,17 @@ async def spanner(ctx,user:discord.User):
   await ctx.channel.send(e)
 
 @client.command(brief="Deletes messages (Mod+)")
-@commands.has_role('Mod')
 async def purge(ctx,amount=5):
   #bulk deletes, although stored in channel if needed
     print ("purging" )
     await ctx.channel.purge(limit = amount + 1)
 
 @client.command(brief="Set the playing of the bot (Co-Owner)")
-@commands.has_role('Co-Owner')
 async def setplaying(ctx, message: str):
   #mainly for aesthetics, pretty neat
   await client.change_presence(activity=discord.Game(name=message))
 
 @client.command(brief="Set the watching of the bot (Co-Owner)")
-@commands.has_role('Co-Owner')
 async def setwatching(ctx, message: str):
   #same as above
   activity = discord.Activity(name= message, type=discord.ActivityType.watching)
@@ -275,7 +272,6 @@ async def traindex(ctx, *args):
 
 
 @client.command(brief="Directly adds to traindex file (Mod+)")
-@commands.has_role("Mod")
 async def newtrain(ctx,train):
   #PRetty much puts the formatted input into the file
   file = open("traindex.txt","a")
@@ -304,7 +300,6 @@ async def suggest(ctx, *args):
 
 
 @client.command(brief="Gets invites(Mod+)")
-@commands.has_role('Mod')
 async def invites(ctx):
   #pulls a list of invites, was gonna use for anti-raid bot
   guild = discord.utils.get(client.guilds, id=int(os.getenv("GUILD")))#guild
@@ -318,7 +313,6 @@ async def invites(ctx):
   await ctx.channel.send(embed=embed)
 
 @client.command(brief="Bans a user(Mods+)")
-@commands.has_role('Mod')
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, user:discord.User, duration: int, *args):
   if duration == 0:
@@ -342,7 +336,6 @@ async def ban(ctx, user:discord.User, duration: int, *args):
     await ctx.channel.send('{} banned'.format(user))
 
 @client.command(brief='Checks all bans(Mod+)')
-@commands.has_role('Mod')
 async def checkbans(ctx):
   unbans = []
   with open('banned.txt') as f:
@@ -391,7 +384,6 @@ async def ping(ctx):
 
 
 @client.command(brief='Locks a channel (Mods+)')
-@commands.has_role('Mod')
 async def lock (ctx):
   roles = [
   747130286050902056,
@@ -404,7 +396,6 @@ async def lock (ctx):
     await ctx.channel.set_permissions(put2, send_messages=False, read_messages = True)
 
 @client.command(brief='Unlocks a channel(Mods+)')
-@commands.has_role('Mod')
 async def unlock (ctx):
   roles = [
   747130286050902056,
@@ -423,7 +414,7 @@ async def play(ctx, *args ):
 
 # No touch below
     
-keepalive.keep_alive()
+#keepalive.keep_alive()
 
 
 
